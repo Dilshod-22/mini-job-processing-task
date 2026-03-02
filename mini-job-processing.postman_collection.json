@@ -1,0 +1,251 @@
+{
+  "info": {
+    "_postman_id": "390f0094-63ae-4d0d-bd1a-ef5ad40f480d",
+    "name": "mini-job-processing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "28136731",
+    "_collection_link": "https://go.postman.co/collection/28136731-390f0094-63ae-4d0d-bd1a-ef5ad40f480d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"Dilshodbekphone@gmail.com\",\r\n  \"password\": \"Dn01020422\",\r\n  \"role\":\"admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"Dilshodbekphone@gmail.com\",\r\n  \"password\": \"Dn01020422\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tasks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTA1NTkwMy1kNGI4LTQ0ZDMtODRiMS0xYjJjN2UzZDhhNTEiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3MjM5MDc1NSwiZXhwIjoxNzcyMzk0MzU1fQ.6ZgiVk4DSuRRa0sbfiTiAf-oTL0lmg9ExL8z9NlwLi4"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/tasks?page=1&limit=20&type=email",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "tasks"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "type",
+              "value": "email"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tasks admin",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMGY5YjBhYi0zOGVlLTRkYTItYjUxNS05N2JlMjlmNjZkZjQiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzI0MjU2MjIsImV4cCI6MTc3MjQyOTIyMn0.lEv9a4HO5hN0TPmg00-mhfJ6pG5a5zhH1azk4snusgg"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tasks admin retry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMGY5YjBhYi0zOGVlLTRkYTItYjUxNS05N2JlMjlmNjZkZjQiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzIzOTE0NDYsImV4cCI6MTc3MjM5NTA0Nn0.bmRPedYCYtv4PF4uW5SBFjOhWWiOM9glLXM1_e2fBWw"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/admin/tasks/04dfe554-6f43-4ac3-9caf-6bb4629dcb4b/retry",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "admin",
+            "tasks",
+            "04dfe554-6f43-4ac3-9caf-6bb4629dcb4b",
+            "retry"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "metrics",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMGY5YjBhYi0zOGVlLTRkYTItYjUxNS05N2JlMjlmNjZkZjQiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzIzOTE0NDYsImV4cCI6MTc3MjM5NTA0Nn0.bmRPedYCYtv4PF4uW5SBFjOhWWiOM9glLXM1_e2fBWw"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/metrics",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "metrics"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTA1NTkwMy1kNGI4LTQ0ZDMtODRiMS0xYjJjN2UzZDhhNTEiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3MjM4OTg5NSwiZXhwIjoxNzcyMzkzNDk1fQ.dVVQT5nU9QgfB3OiFQm4PO8vTaQth_zJsVlGQivx0cU"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"type\": \"email\",\r\n  \"priority\": 10,\r\n  \"payload\": {\r\n    \"to\": \"myprofileforgithub@gmail.com\",\r\n    \"subject\": \"Hi my dear!\"\r\n  },\r\n  \"idempotency_key\": \"Dn01020422\",\r\n  \"scheduled_at\": \"2026-03-01T12:00:00Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "tasks"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task cencel",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTA1NTkwMy1kNGI4LTQ0ZDMtODRiMS0xYjJjN2UzZDhhNTEiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3MjM4OTg5NSwiZXhwIjoxNzcyMzkzNDk1fQ.dVVQT5nU9QgfB3OiFQm4PO8vTaQth_zJsVlGQivx0cU"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"type\": \"email\",\r\n  \"priority\": 10,\r\n  \"payload\": {\r\n    \"to\": \"myprofileforgithub@gmail.com\",\r\n    \"subject\": \"Hi my dear!\"\r\n  },\r\n  \"idempotency_key\": \"Dn01020422\",\r\n  \"scheduled_at\": \"2026-03-01T12:00:00Z\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/tasks/04dfe554-6f43-4ac3-9caf-6bb4629dcb4b/cancel",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "tasks",
+            "04dfe554-6f43-4ac3-9caf-6bb4629dcb4b",
+            "cancel"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
