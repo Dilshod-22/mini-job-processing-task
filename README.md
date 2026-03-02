@@ -1,98 +1,310 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Mini Job Processing Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Background job processing platformasi - scheduling, prioritization, rate limiting, retries, authentication va role-based authorization bilan.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Texnologiyalar
 
-## Description
+| Texnologiya | Versiya | Vazifasi |
+|-------------|---------|----------|
+| NestJS | 11.x | Backend framework |
+| TypeScript | 5.x | Dasturlash tili |
+| PostgreSQL | 16.x | Ma'lumotlar bazasi |
+| TypeORM | 0.3.x | ORM |
+| Redis | 7.x | Queue va caching |
+| BullMQ | 5.x | Background job processing |
+| JWT | - | Authentication |
+| Swagger | - | API dokumentatsiya |
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## Tezkor boshlash
+
+### 1. Repositoryni klonlash
 
 ```bash
-$ npm install
+git clone <repo-url>
+cd mini-job-processing-task
 ```
 
-## Compile and run the project
+### 2. Docker bilan ishga tushirish (tavsiya qilinadi)
 
 ```bash
-# development
-$ npm run start
+# Barcha servislarni ishga tushirish
+docker-compose up --build
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Yoki background mode
+docker-compose up -d --build
 ```
 
-## Run tests
+Bu quyidagilarni ishga tushiradi:
+- **API**: http://localhost:3001
+- **PostgreSQL**: localhost:5432
+- **Redis**: localhost:6379
+
+### 3. Manual ishga tushirish
 
 ```bash
-# unit tests
-$ npm run test
+# Dependencies o'rnatish
+npm install
 
-# e2e tests
-$ npm run test:e2e
+# .env faylini yaratish
+cp env.example .env
 
-# test coverage
-$ npm run test:cov
+# PostgreSQL va Redis ni lokalda ishga tushiring
+
+# Migratsiyalarni ishga tushirish
+npm run migration:run
+
+# Ilovani ishga tushirish
+npm run start:dev
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## API Dokumentatsiya (Swagger)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Ilova ishga tushgach, brauzerda oching:
+
+```
+http://localhost:3001/docs
+```
+
+Bu yerda:
+- Barcha endpointlar ro'yxati
+- Request/Response sxemalari
+- "Try it out" - endpointlarni sinab ko'rish imkoniyati
+- Authorization - JWT token bilan autentifikatsiya
+
+---
+
+## API Endpointlari
+
+### Authentication
+
+| Method | Endpoint | Tavsif | Auth |
+|--------|----------|--------|------|
+| POST | `/auth/register` | Yangi foydalanuvchi yaratish | - |
+| POST | `/auth/login` | Tizimga kirish | - |
+
+### Tasks (User)
+
+| Method | Endpoint | Tavsif | Auth |
+|--------|----------|--------|------|
+| POST | `/tasks` | Yangi task yaratish | USER/ADMIN |
+| GET | `/tasks` | O'z tasklarini ko'rish | USER/ADMIN |
+| POST | `/tasks/:id/cancel` | O'z taskini bekor qilish | USER/ADMIN |
+
+### Tasks (Admin)
+
+| Method | Endpoint | Tavsif | Auth |
+|--------|----------|--------|------|
+| GET | `/admin/tasks` | Barcha tasklarni ko'rish | ADMIN |
+| POST | `/admin/tasks/:id/retry` | FAILED taskni qayta ishga tushirish | ADMIN |
+| POST | `/admin/tasks/:id/cancel` | Istalgan PENDING taskni bekor qilish | ADMIN |
+
+### Metrics
+
+| Method | Endpoint | Tavsif | Auth |
+|--------|----------|--------|------|
+| GET | `/metrics` | Task statistikalarini ko'rish | ADMIN |
+
+---
+
+## Qanday ishlatish (Step by Step)
+
+### 1. Ro'yxatdan o'tish
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl -X POST http://localhost:3001/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "secret123"
+  }'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Javob:**
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
 
-## Resources
+### 2. Token bilan task yaratish
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+curl -X POST http://localhost:3001/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -d '{
+    "type": "email",
+    "priority": "high",
+    "payload": {
+      "to": "test@example.com",
+      "subject": "Hello!"
+    }
+  }'
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 3. Tasklarni ko'rish
 
-## Support
+```bash
+curl http://localhost:3001/tasks \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 4. Task statuslarini filter qilish
 
-## Stay in touch
+```bash
+# Status bo'yicha
+curl "http://localhost:3001/tasks?status=COMPLETED" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Sana oralig'i bo'yicha
+curl "http://localhost:3001/tasks?from=2026-01-01&to=2026-12-31" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
 
-## License
+# Pagination
+curl "http://localhost:3001/tasks?page=1&limit=10" \
+  -H "Authorization: Bearer <YOUR_TOKEN>"
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## Task Priority va Status
+
+### Priority
+| Qiymat | Tavsif |
+|--------|--------|
+| `high` | Yuqori ustuvorlik |
+| `normal` | Oddiy (default) |
+| `low` | Past ustuvorlik |
+
+### Status
+| Qiymat | Tavsif |
+|--------|--------|
+| `PENDING` | Kutmoqda |
+| `PROCESSING` | Ishlanmoqda |
+| `COMPLETED` | Bajarildi |
+| `FAILED` | Xatolik |
+| `CANCELLED` | Bekor qilindi |
+
+---
+
+## Rate Limiting
+
+Task turiga qarab cheklovlar:
+
+| Task turi | Limit |
+|-----------|-------|
+| `email` | 5 ta/daqiqa |
+| `report` | 2 ta/daqiqa |
+
+---
+
+## Arxitektura
+
+```
+src/
+├── auth/                 # Authentication module
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   ├── jwt.strategy.ts
+│   └── dto/
+├── users/                # Users module
+│   ├── users.entity.ts
+│   ├── users.service.ts
+│   └── users.module.ts
+├── tasks/                # Tasks module
+│   ├── task.entity.ts
+│   ├── tasks.service.ts
+│   ├── tasks.controller.ts
+│   ├── admin-tasks.controller.ts
+│   ├── tasks.worker.ts   # BullMQ worker
+│   └── dto/
+├── metrics/              # Metrics module
+│   ├── metrics.controller.ts
+│   └── metrics.dto.ts
+├── mock/                 # Mock service
+│   └── mock.service.ts   # 2-5s delay, 25% failure simulation
+├── common/               # Shared utilities
+│   ├── filters/          # Global exception filter
+│   └── dto/
+├── migrations/           # TypeORM migrations
+├── app.module.ts
+├── main.ts
+└── data-source.ts
+```
+
+---
+
+## Environment Variables
+
+```env
+# Database
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=your_username
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=mini_job_db
+
+# JWT
+JWT_SECRET=your_secret_key
+JWT_EXPIRES_IN=60m    # 15m, 30m, 60m, yoki sekundlarda
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# App
+PORT=3001
+```
+
+---
+
+## NPM Scriptlar
+
+```bash
+# Development
+npm run start:dev       # Watch mode bilan ishga tushirish
+
+# Production
+npm run build           # TypeScript compile
+npm run start:prod      # Production mode
+
+# Database
+npm run migration:run   # Migratsiyalarni ishga tushirish
+npm run migration:revert # Oxirgi migratsiyani bekor qilish
+
+# Testing
+npm run test            # Unit testlar
+npm run test:e2e        # E2E testlar
+npm run test:cov        # Test coverage
+
+# Code quality
+npm run lint            # ESLint
+npm run format          # Prettier
+```
+
+---
+
+## Xavfsizlik
+
+- JWT token bilan autentifikatsiya
+- Password bcrypt bilan hash qilinadi
+- Role-based access control (ADMIN/USER)
+- Global exception handler (app crash bo'lmaydi)
+- Input validation (class-validator)
+- SQL injection himoyasi (TypeORM parametrized queries)
+
+---
+
+## Muallif
+
+- Bu loyiha mini-job-processing uchun yaratilgan.
+- Creator:Dilshodbek
+---
+
+## Litsenziya
+
+UNLICENSED
